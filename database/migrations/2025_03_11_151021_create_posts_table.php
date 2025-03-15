@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('uuid')->unique();
             $table->foreignId('user_id')->constrained('users');
-            $table->string('content');
+            $table->text('content');
             $table->string('image');
             $table->enum('privacy', ['public', 'friends', 'private'])->default('public');
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

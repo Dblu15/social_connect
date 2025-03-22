@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1489c22afb11839fb26d31790660b52d",
+    "content-hash": "c008f73232bc60d133804fd0d841e8a5",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -2370,6 +2370,70 @@
                 "source": "https://github.com/laravel/prompts/tree/v0.3.5"
             },
             "time": "2025-02-11T13:34:40+00:00"
+        },
+        {
+            "name": "laravel/sanctum",
+            "version": "v4.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/sanctum.git",
+                "reference": "ec1dd9ddb2ab370f79dfe724a101856e0963f43c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/sanctum/zipball/ec1dd9ddb2ab370f79dfe724a101856e0963f43c",
+                "reference": "ec1dd9ddb2ab370f79dfe724a101856e0963f43c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/console": "^11.0|^12.0",
+                "illuminate/contracts": "^11.0|^12.0",
+                "illuminate/database": "^11.0|^12.0",
+                "illuminate/support": "^11.0|^12.0",
+                "php": "^8.2",
+                "symfony/console": "^7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "orchestra/testbench": "^9.0|^10.0",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^11.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Sanctum\\SanctumServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Sanctum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Laravel Sanctum provides a featherweight authentication system for SPAs and simple APIs.",
+            "keywords": [
+                "auth",
+                "laravel",
+                "sanctum"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/sanctum/issues",
+                "source": "https://github.com/laravel/sanctum"
+            },
+            "time": "2025-01-26T19:34:36+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -8752,6 +8816,56 @@
                 }
             ],
             "time": "2025-03-07T07:31:03+00:00"
+        },
+        {
+            "name": "rexlabs/enum",
+            "version": "2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rexlabsio/enum-php.git",
+                "reference": "b4d4be2f194ffbf239946de7fd7908e4c01263e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rexlabsio/enum-php/zipball/b4d4be2f194ffbf239946de7fd7908e4c01263e8",
+                "reference": "b4d4be2f194ffbf239946de7fd7908e4c01263e8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0 <8.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.5.7|^7.5|^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Rexlabs\\Enum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jodie Dunlop",
+                    "email": "jodie.dunlop@rexlabs.com.au"
+                }
+            ],
+            "description": "Enumeration (enum) implementation for PHP",
+            "keywords": [
+                "constants",
+                "enum",
+                "enumeration",
+                "library",
+                "valuelist"
+            ],
+            "support": {
+                "issues": "https://github.com/rexlabsio/enum-php/issues",
+                "source": "https://github.com/rexlabsio/enum-php/tree/2.4.0"
+            },
+            "time": "2025-01-07T23:22:51+00:00"
         },
         {
             "name": "sebastian/cli-parser",

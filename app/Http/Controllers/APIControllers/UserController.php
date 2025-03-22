@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\APIControllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -14,21 +15,22 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $users = User::query()->paginate(10);
 
         return response()->json([
+            'status' => 'success',
             'data' => $users
         ]);
     }
 
-    public function store(UserRequest $request)
+    public function store(UserRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
         if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
+            $path = $request->file('avatar')->store('avatars');
             $validated['avatar'] = $path;
         }
         if (isset($validated['password'])) {
@@ -39,10 +41,10 @@ class UserController extends Controller
         return response()->json([
             'message' => 'User created successfully.',
             'data'    => $user
-        ], 201);
+        ], 200);
     }
 
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $user = User::query()->find($id);
         if (!$user) {
@@ -57,7 +59,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(UserRequest $request, $id)
+    public function update(UserRequest $request, $id): JsonResponse
     {
         $user = User::query()->find($id);
         if(!$user){
@@ -66,12 +68,18 @@ class UserController extends Controller
                 'message' => 'User not found.'
             ]);
         }
+
         $data = $request->validated();
 
         if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar')->store('avatar');
-            $data['avatar'] = $avatar;
+            if ($user->avatar) {
+                Storage::delete($user->avatar);
+            }
+            $data['avatar'] = $request->file('avatar')->store('avatars');
+        }else{
+            $data['avatar'] = $user->avatar;
         }
+
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
@@ -82,10 +90,10 @@ class UserController extends Controller
             'status' => 'success',
             'message' => 'User updated successfully.',
             'data'    => $user
-        ], 201);
+        ], 200);
     }
 
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $user = User::find($id);
 
@@ -95,13 +103,14 @@ class UserController extends Controller
             ], 404);
         }
 
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
+        if ($user->avatar) {
+            Storage::delete($user->avatar);
         }
 
         $user->delete();
 
         return response()->json([
+            'status' => 'success',
             'message' => 'User deleted successfully.'
         ], 200);
     }

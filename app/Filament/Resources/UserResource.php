@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\RoleUser;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
@@ -26,6 +27,11 @@ class UserResource extends Resource
 
     protected static ?string $navigationGroup = 'User';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -42,10 +48,6 @@ class UserResource extends Resource
                                     ->minLength(6)
                                     ->password()
                                     ->required(),
-                                Forms\Components\TextInput::make('passwordConfirmation')
-                                    ->same('password')
-                                    ->password()
-                                    ->required(),
                                 Forms\Components\TextInput::make('email')
                                     ->unique()
                                     ->Regex('/^.+$/i')
@@ -59,10 +61,7 @@ class UserResource extends Resource
                         Forms\Components\Section::make()
                             ->schema([
                                 Forms\Components\Select::make('role')
-                                    ->options([
-                                        'admin' => 'Admin',
-                                        'user' => 'User',
-                                    ])
+                                    ->options(RoleUser::class)
                                     ->required(),
                                 Forms\Components\Toggle::make('is_verify'),
                                 Forms\Components\MarkdownEditor::make('bio')

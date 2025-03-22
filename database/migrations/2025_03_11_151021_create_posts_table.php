@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PostPrivacy;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->text('content');
             $table->string('image');
-            $table->enum('privacy', ['public', 'friends', 'private'])->default('public');
+            $table->enum('privacy', PostPrivacy::toArray())->default(PostPrivacy::Public->value);
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

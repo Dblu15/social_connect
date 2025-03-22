@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoleUser;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +21,7 @@ return new class extends Migration
             $table->string('bio')->nullable();
             $table->string('avatar')->nullable();
             $table->boolean('is_verify')->default(0);
-            $table->enum('role', ['admin','user'])->default('user');
+            $table->enum('role', \App\Enums\RoleUser::toArray())->default(RoleUser::User->value);
             $table->rememberToken();
             $table->timestamps();
         });

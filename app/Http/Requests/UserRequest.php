@@ -27,7 +27,7 @@ class UserRequest extends FormRequest
                 'name' => ['required', 'string', 'min:2'],
                 'email' => ['required', 'email', 'unique:users,email'],
                 'password' => ['required', 'min:6'],
-                'passwordConfirmation' => ['required', 'same:password'],
+                'passwordConfirmation' => ['same:password'],
                 'role' => ['required', Rule::in(['admin', 'user'])],
                 'is_verify' => ['required', 'boolean'],
                 'bio' => ['nullable', 'string'],

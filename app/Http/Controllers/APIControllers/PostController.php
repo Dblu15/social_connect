@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\APIControllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -12,16 +13,17 @@ use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $posts = Post::query()->paginate(10);
 
         return response()->json([
+            'status' => 'success',
             'data' => $posts
         ]);
     }
 
-    public function store(PostRequest $request)
+    public function store(PostRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -34,10 +36,10 @@ class PostController extends Controller
         return response()->json([
             'message' => 'Post created successfully.',
             'data'    => $post
-        ], 201);
+        ], 200);
     }
 
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $post = Post::query()->find($id);
         if (!$post) {
@@ -51,9 +53,9 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(PostRequest $request, $id)
+    public function update(PostRequest $request, $id): JsonResponse
     {
-        $post = Post::query()->find($id);
+        $post = Post::find($id);
 
         if (!$post){
             return response()->json([
@@ -65,8 +67,12 @@ class PostController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image')->store('posts');
-            $data['image'] = $image;
+            if ($post->image) {
+                Storage::delete($post->image);
+            }
+            $data['image'] = $request->file('image')->store('posts');
+        }else{
+            $data['image'] = $post->image;
         }
 
         $post->update($data);
@@ -74,10 +80,10 @@ class PostController extends Controller
             'status' => 'success',
             'message' => 'Post updated successfully.',
             'data' => $post
-        ], 201);
+        ], 200);
     }
 
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $post = Post::query()->find($id);
         if (!$post) {
@@ -87,14 +93,15 @@ class PostController extends Controller
             ]);
         }
 
-        if ($post->image && Storage::disk('public')->exists($post->image)) {
-            Storage::disk('public')->delete($post->image);
+        if ($post->image) {
+            Storage::delete($post->image);
         }
 
         $post->delete();
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Post deleted successfully.'
-        ], 204);
+        ], 200);
     }
 }

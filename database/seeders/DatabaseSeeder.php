@@ -2,10 +2,13 @@
 
 namespace Database\Seeders;
 
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,12 +19,23 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Anderson',
-            'email' => 'anderson@gmail.com',
-            'password' => Hash::make('admin123'),
-            'is_verify' => true,
-            'role' => 'admin'
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'anderson@gmail.com'],
+            [
+                'name' => 'Anderson',
+                'password' => Hash::make('admin123'),
+                'is_verify' => true,
+            ]
+        );
+
+        $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
+
+        if (!$admin->hasRole('super_admin')) {
+            $admin->assignRole($superAdminRole);
+            $this->command->info('✅ Assigned Super Admin role.');
+        }
+
+        Artisan::call('shield:generate', ['--all' => true]);
+        $this->command->info('✅ Permissions generated successfully.');
     }
 }

@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('bio')->nullable();
             $table->string('avatar')->nullable();
             $table->boolean('is_verify')->default(0);
-            $table->enum('role', \App\Enums\RoleUser::toArray())->default(RoleUser::User->value);
             $table->rememberToken();
             $table->timestamps();
         });

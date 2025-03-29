@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::apiResource('comments', \App\Http\Controllers\APIControllers\CommentController::class);
         Route::apiResource('likes', \App\Http\Controllers\APIControllers\LikeController::class);
         Route::apiResource('shares', \App\Http\Controllers\APIControllers\ShareController::class);
+        Route::apiResource('notifications', \App\Http\Controllers\APIControllers\NotificationController::class);
     });
     Route::post('/logout', [AuthController::class, 'logout']);
 });

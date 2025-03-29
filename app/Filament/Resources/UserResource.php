@@ -16,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\Rule;
 
 class UserResource extends Resource
 {
@@ -46,12 +47,14 @@ class UserResource extends Resource
                                 Forms\Components\TextInput::make('password')
                                     ->dehydrated(fn($state) => filled($state))
                                     ->minLength(6)
-                                    ->password()
-                                    ->required(),
+                                    ->password(),
                                 Forms\Components\TextInput::make('email')
-                                    ->unique()
                                     ->Regex('/^.+$/i')
-                                    ->required(),
+                                    ->required()
+                                    ->rules([
+                                        fn ($get, $context) => Rule::unique('users', 'email')
+                                            ->ignore($context === 'edit' ? $get('id') : null),
+                                    ]),
                                 Forms\Components\FileUpload::make('avatar')
                                     ->preserveFilenames()
                                     ->imageEditor()
@@ -60,9 +63,11 @@ class UserResource extends Resource
 
                         Forms\Components\Section::make()
                             ->schema([
-                                Forms\Components\Select::make('role')
-                                    ->options(RoleUser::class)
-                                    ->required(),
+                                Forms\Components\Select::make('roles')
+                                    ->relationship('roles', 'name')
+                                    ->preload()
+                                    ->searchable()
+                                    ->dehydrated(false),
                                 Forms\Components\Toggle::make('is_verify'),
                                 Forms\Components\MarkdownEditor::make('bio')
                             ])
@@ -88,7 +93,9 @@ class UserResource extends Resource
                 IconColumn::make('is_verify')
                     ->boolean(),
                 TextColumn::make('created_at')
-                    ->date()
+                    ->date(),
+                TextColumn::make('roles.name')
+                ->searchable(),
             ])
             ->filters([
                 //
@@ -110,16 +117,6 @@ class UserResource extends Resource
             //
         ];
     }
-    public static function canEdit($record): bool
-    {
-        return $record->role !== 'admin';
-    }
-
-    public static function canDelete($record): bool
-    {
-        return $record->role !== 'admin';
-    }
-
 
     public static function getPages(): array
     {
